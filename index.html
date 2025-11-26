@@ -18,57 +18,64 @@
         }
     </script>
     <style>
-        body { background-color: #ffffff; font-family: sans-serif; }
+        /* 背景色设为透明，方便嵌入 */
+        body { 
+            background-color: transparent; 
+            font-family: sans-serif; 
+            display: flex;
+            justify-content: center;
+            padding-top: 20px;
+        }
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
 </head>
 <body class="text-gray-800">
 
-    <!-- 容器：添加了 overflow-hidden 防止整体撑大 -->
-    <div class="w-full max-w-lg mx-auto bg-white relative overflow-hidden min-h-screen md:min-h-0">
+    <!-- 外框保持圆角 (rounded-[20px]) -->
+    <div class="w-full max-w-[400px] bg-white rounded-[20px] shadow-xl overflow-hidden border border-gray-100 mx-auto">
         
-        <!-- 顶部 Banner -->
-        <header class="bg-brand-yellow px-6 pt-8 pb-16 text-center relative z-10 rounded-b-[30px]">
+        <!-- 顶部 Banner (黄色区域) -->
+        <!-- 修改：移除了 rounded-b-[25px]，现在底部是直角 -->
+        <header class="bg-brand-yellow px-5 pt-6 pb-12 text-center relative z-10">
             <div class="mb-2">
                 <i class="fa-solid fa-truck-fast text-3xl text-brand-dark"></i>
             </div>
-            <h1 class="text-2xl font-bold text-brand-dark">Delivery Checker</h1>
-            <p class="text-sm text-gray-800 opacity-90">Cold Chain Coverage</p>
+            <h1 class="text-xl font-bold text-brand-dark">Delivery Checker</h1>
+            <p class="text-xs text-gray-800 opacity-80">Cold Chain Coverage</p>
         </header>
 
         <!-- 主要内容 -->
-        <main class="px-4 relative z-20 -mt-10">
+        <main class="px-4 relative z-20 -mt-8 pb-6">
             
-            <!-- 搜索卡片 (优化：手机端 padding 减小为 p-3，确保内容不被挤出) -->
-            <div class="bg-white rounded-xl shadow-lg p-4 md:p-6 border border-gray-100">
-                <label class="block text-xs font-bold text-gray-500 mb-2 uppercase">Enter Postcode</label>
+            <!-- 搜索卡片 -->
+            <div class="bg-white rounded-2xl shadow-md p-4 border border-gray-50">
+                <label class="block text-[10px] font-bold text-gray-400 mb-2 uppercase tracking-wider pl-1">Enter Postcode</label>
                 
-                <!-- 布局容器 -->
-                <div class="flex items-center w-full gap-2">
-                    <!-- 输入框：flex-1 自动占据剩余空间，min-w-0 允许缩小 -->
+                <!-- 胶囊形状搜索框 -->
+                <div class="flex items-stretch w-full shadow-sm rounded-full border border-gray-200 overflow-hidden focus-within:border-brand-yellow focus-within:ring-1 focus-within:ring-brand-yellow transition-all">
+                    
                     <input type="text" id="postcodeInput" 
-                        class="flex-1 min-w-0 bg-gray-50 border-2 border-gray-200 rounded-lg px-3 py-3 text-lg font-mono focus:outline-none focus:border-brand-yellow focus:bg-white transition-all placeholder-gray-400 w-full"
+                        class="flex-1 min-w-0 bg-gray-50 px-4 py-2.5 text-base font-mono focus:outline-none focus:bg-white transition-all placeholder-gray-400"
                         placeholder="81550" 
                         maxlength="5" 
                         inputmode="numeric">
                     
-                    <!-- 按钮：flex-none 固定宽度，防止被压缩 -->
                     <button onclick="checkDelivery()" 
-                        class="flex-none bg-brand-dark text-white h-[52px] w-[52px] rounded-lg font-bold hover:bg-black active:scale-95 transition-all shadow-md flex items-center justify-center">
-                        <i class="fa-solid fa-magnifying-glass text-lg"></i>
+                        class="flex-none bg-brand-dark text-white px-5 font-bold hover:bg-black active:scale-95 transition-all flex items-center justify-center">
+                        <i class="fa-solid fa-magnifying-glass text-sm"></i>
                     </button>
                 </div>
             </div>
 
             <!-- 结果显示区域 -->
-            <div id="resultCard" class="hidden mt-5 transition-all duration-300"></div>
+            <div id="resultCard" class="hidden mt-4 transition-all duration-300"></div>
 
             <!-- 完整列表按钮 -->
-            <div class="mt-8 text-center pb-10">
+            <div class="mt-6 text-center">
                 <a href="https://docs.google.com/spreadsheets/d/e/2PACX-1vTVNXva8ls8N9xT_lAlL9EEkaRJi7axFpToEGPKnDryEB6-3mhySiwr1s54gO8AMHW3FfzEf0CyYO3f/pubhtml?gid=984134389&single=true" 
                    target="_blank"
-                   class="inline-flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-600 rounded-full text-xs font-bold uppercase tracking-wider hover:bg-gray-200 transition-colors">
+                   class="inline-flex items-center gap-2 px-4 py-2 bg-gray-50 text-gray-500 rounded-full text-[11px] font-bold uppercase tracking-wider hover:bg-gray-100 hover:text-gray-800 transition-colors border border-transparent hover:border-gray-200">
                     <i class="fa-solid fa-list"></i> View Full Coverage List
                 </a>
             </div>
@@ -92,20 +99,19 @@
             
             setTimeout(() => {
                 resultCard.classList.remove('hidden');
-                // 触发动画
                 setTimeout(() => {
                     resultCard.classList.remove('opacity-0', '-translate-y-2');
                     resultCard.classList.add('opacity-100', 'translate-y-0');
                 }, 10);
                 
                 if (code.length !== 5) {
-                    resultCard.className = "mt-5 p-5 rounded-xl border-2 bg-yellow-50 border-yellow-200 text-yellow-800 transition-all duration-300 transform origin-top";
+                    resultCard.className = "mt-4 p-4 rounded-xl border border-yellow-100 bg-yellow-50 text-yellow-800 transition-all duration-300 transform origin-top shadow-sm";
                     resultCard.innerHTML = `
                         <div class="flex items-center gap-3">
-                            <i class="fa-solid fa-triangle-exclamation text-xl"></i>
+                            <i class="fa-solid fa-triangle-exclamation text-lg"></i>
                             <div>
-                                <h3 class="font-bold">Invalid Format</h3>
-                                <p class="text-sm">Please enter a 5-digit postcode.</p>
+                                <h3 class="font-bold text-sm">Invalid Format</h3>
+                                <p class="text-xs mt-0.5">Please enter a 5-digit postcode.</p>
                             </div>
                         </div>
                     `;
@@ -114,32 +120,32 @@
 
                 if (coverageList.has(code)) {
                     // 覆盖
-                    resultCard.className = "mt-5 p-5 rounded-xl border-2 bg-green-50 border-green-200 text-green-800 transition-all duration-300 transform origin-top";
+                    resultCard.className = "mt-4 p-4 rounded-xl border border-green-100 bg-green-50 text-green-800 transition-all duration-300 transform origin-top shadow-sm";
                     resultCard.innerHTML = `
-                        <div class="flex items-center gap-3">
-                            <div class="bg-green-100 p-3 rounded-full shadow-sm">
-                                <i class="fa-solid fa-check text-xl text-green-600"></i>
+                        <div class="flex items-center gap-3 mb-3">
+                            <div class="bg-green-100 p-2 rounded-full">
+                                <i class="fa-solid fa-check text-lg text-green-600"></i>
                             </div>
                             <div>
-                                <h3 class="font-bold text-lg">Available!</h3>
-                                <p class="text-sm">We deliver to <span class="font-mono font-bold">${code}</span>.</p>
+                                <h3 class="font-bold text-sm">Available!</h3>
+                                <p class="text-xs mt-0.5">We deliver to <span class="font-mono font-bold">${code}</span>.</p>
                             </div>
                         </div>
-                        <a href="https://www.baozhan.com.my/" class="block mt-4 text-center bg-green-600 text-white py-3 rounded-lg font-bold hover:bg-green-700 transition-colors shadow-md hover:shadow-lg">
+                        <a href="https://www.baozhan.com.my/" class="block w-full text-center bg-green-600 text-white py-2.5 rounded-lg text-sm font-bold hover:bg-green-700 transition-colors shadow-md active:scale-95">
                             Order Now
                         </a>
                     `;
                 } else {
                     // 不覆盖
-                    resultCard.className = "mt-5 p-5 rounded-xl border-2 bg-red-50 border-red-200 text-red-800 transition-all duration-300 transform origin-top";
+                    resultCard.className = "mt-4 p-4 rounded-xl border border-red-100 bg-red-50 text-red-800 transition-all duration-300 transform origin-top shadow-sm";
                     resultCard.innerHTML = `
                         <div class="flex items-center gap-3">
-                            <div class="bg-red-100 p-3 rounded-full shadow-sm">
-                                <i class="fa-solid fa-xmark text-xl text-red-600"></i>
+                            <div class="bg-red-100 p-2 rounded-full">
+                                <i class="fa-solid fa-xmark text-lg text-red-600"></i>
                             </div>
                             <div>
-                                <h3 class="font-bold text-lg">Not Covered</h3>
-                                <p class="text-sm">Sorry, <span class="font-mono font-bold">${code}</span> is outside our zone.</p>
+                                <h3 class="font-bold text-sm">Not Covered</h3>
+                                <p class="text-xs mt-0.5">Sorry, <span class="font-mono font-bold">${code}</span> is outside our zone.</p>
                             </div>
                         </div>
                     `;
@@ -147,7 +153,6 @@
             }, 50);
         }
 
-        // 绑定回车键
         document.getElementById('postcodeInput').addEventListener('keypress', function (e) {
             if (e.key === 'Enter') {
                 checkDelivery();
