@@ -118,10 +118,10 @@
                 }
 
                 if (coverageList.has(code)) {
-                    // 覆盖 (已添加 target="_top")
+                    // 覆盖 (已移除 Order Now 按钮)
                     resultCard.className = "mt-4 p-4 rounded-xl border border-green-100 bg-green-50 text-green-800 transition-all duration-300 transform origin-top shadow-sm";
                     resultCard.innerHTML = `
-                        <div class="flex items-center gap-3 mb-3">
+                        <div class="flex items-center gap-3">
                             <div class="bg-green-100 p-2 rounded-full">
                                 <i class="fa-solid fa-check text-lg text-green-600"></i>
                             </div>
@@ -130,9 +130,6 @@
                                 <p class="text-xs mt-0.5">We deliver to <span class="font-mono font-bold">${code}</span>.</p>
                             </div>
                         </div>
-                        <a href="https://www.baozhan.com.my/" target="_top" class="block w-full text-center bg-green-600 text-white py-2.5 rounded-lg text-sm font-bold hover:bg-green-700 transition-colors shadow-md active:scale-95">
-                            Order Now
-                        </a>
                     `;
                 } else {
                     // 不覆盖
